@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>Device Information</h1>
+<div class="row">
+    <div class="col">
+        <h3>Name</h3>
+    </div>
+    <div class="col">
+        <h3>{{ device.name }}</h3>
+    </div>
+    <div class="col">
+        <form method="POST" action="{{ url_for('update_name', device_id=device.id) }}">
+            <button class="btn btn-sm btn-warning">Edit</button>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <h3>Device Type</h3>
+    </div>
+    <div class="col">
+        <h3>{{device.type}}</h3>
+    </div>
+    <div class="col"></div>
+</div>
+{% if device.type == 'Light' %}
+<div class="row">
+    <div class="col">
+        <h3>Brightness</h3>
+    </div>
+    <div class="col">
+        <h3>{{device.brightness}}</h3>
+    </div>
+    <div class="col">
+        <a class="btn btn-sm btn-info" href="{{ url_for('update_brightness', device_id=device.id) }}">Change</a>
+    </div>
+</div>
+{% endif %}
+
+{% if device.type == 'Thermostat' or device.type == 'Kettle' %}
+<div class="row">
+    <div class="col">
+        <h3>Temperature</h3>
+    </div>
+    <div class="col">
+        <h3>{{device.temperature}}</h3>
+    </div>
+    <div class="col">
+        <a class="btn btn-sm btn-info" href="{{ url_for('update_temperature', device_id=device.id) }}">Change</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

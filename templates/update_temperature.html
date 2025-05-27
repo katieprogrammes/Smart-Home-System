@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2>Update Temperature - {{ device.name }}</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.temperature.label(class="form-label") }}
+        {{ form.temperature(class="form-control", value=device.temperature or '') }}
+    </div>
+    <button type="submit" class="btn btn-success">{{ form.submit.label.text }}</button>
+</form>
+{% endblock %}

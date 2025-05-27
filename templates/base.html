@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Smart Home</title>
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
+</head> 
+<body>
+    <header>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-4">
+                    <nav>
+                        <a href="{{ url_for('home') }}"><h4>Home</h4></a>
+                        <a href="{{ url_for('add_device') }}"><h4>Add Device</h4></a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    {% block body %} {% endblock %}
+</body>
+</html>
