@@ -1,15 +1,13 @@
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for
 from app import app
 from forms import AddDeviceForm, UpdateTemperatureForm, UpdateBrightnessForm, UpdateNameForm
 from database import db, Device
 from models import *
-from flask_apscheduler import APScheduler
-from datetime import datetime
 from collections import defaultdict
 
 
 
-
+# Main Routes
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -161,4 +159,10 @@ def turn_on_lights():
     db.session.commit()
     return redirect(url_for('view_all'))
 
-
+@app.route('/lock_all_doors', methods=['POST'])
+def lock_all_doors():
+    locks = Device.query.filter_by(type='DoorLock').all()
+    for lock in locks:
+        lock.status = True
+    db.session.commit()
+    return redirect(url_for('view_all'))

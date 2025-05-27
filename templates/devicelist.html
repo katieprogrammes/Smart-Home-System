@@ -12,6 +12,11 @@
         <button type="submit" style="margin-bottom: 10px;">Turn All Lights On</button>
     </form>
     {% endif %}
+    {% if type == 'DoorLock' %}
+    <form method="POST" action="{{ url_for('lock_all_doors') }}">
+        <button type="submit" style="margin-bottom: 10px;">Lock All Doors</button>
+    </form>
+    {% endif %}
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>
