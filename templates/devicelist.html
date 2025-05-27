@@ -4,6 +4,14 @@
 
 {% for type, devices in grouped_devices.items() %}
     <h3 class="mt-4">{{ type }}s</h3>
+    {% if type == 'Light' %}
+    <form method="POST" action="{{ url_for('turn_off_lights') }}">
+        <button type="submit" style="margin-bottom: 10px;">Turn All Lights Off</button>
+    </form>
+    <form method="POST" action="{{ url_for('turn_on_lights') }}">
+        <button type="submit" style="margin-bottom: 10px;">Turn All Lights On</button>
+    </form>
+    {% endif %}
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>

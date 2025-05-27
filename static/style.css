@@ -1,0 +1,20 @@
+header {
+    background-color: #A7C7E7;
+}
+nav a {
+    float: left;
+    text-align: center;
+    padding: 20px 12px;
+    text-decoration: none;
+    font-weight: 400;
+    color: black;
+}
+body {
+    background-color: #CCCCFF;
+}
+.homelinks a {
+    text-align: center;
+}
+.homecont {
+    padding: 20px 0;
+}

@@ -136,3 +136,19 @@ def update_name(device_id):
         return redirect(url_for('view_all'))
 
     return render_template('update_name.html', form=form, device=device)
+
+@app.route('/turn_off_lights', methods=['POST'])
+def turn_off_lights():
+    lights = Device.query.filter_by(type='Light').all()
+    for light in lights:
+        light.status = False
+    db.session.commit()
+    return redirect(url_for('view_all'))
+
+@app.route('/turn_on_lights', methods=['POST'])
+def turn_on_lights():
+    lights = Device.query.filter_by(type='Light').all()
+    for light in lights:
+        light.status = True
+    db.session.commit()
+    return redirect(url_for('view_all'))
