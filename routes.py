@@ -3,6 +3,7 @@ from app import app
 from forms import AddDeviceForm, UpdateTemperatureForm, UpdateBrightnessForm, UpdateNameForm
 from database import db, Device
 from models import *
+from flask_apscheduler import APScheduler
 from datetime import datetime
 from collections import defaultdict
 
@@ -137,6 +138,13 @@ def update_name(device_id):
 
     return render_template('update_name.html', form=form, device=device)
 
+@app.route('/delete/<int:device_id>', methods=['POST'])
+def delete_device(device_id):
+    device = Device.query.get_or_404(device_id)
+    db.session.delete(device)
+    db.session.commit()
+    return redirect(url_for('view_all'))
+
 @app.route('/turn_off_lights', methods=['POST'])
 def turn_off_lights():
     lights = Device.query.filter_by(type='Light').all()
@@ -152,3 +160,5 @@ def turn_on_lights():
         light.status = True
     db.session.commit()
     return redirect(url_for('view_all'))
+
+
