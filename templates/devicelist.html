@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 {% block body %}
-<h2>All Devices</h2>
-
+<br>
+<div class="row">
+    <div class="col">
+        <h2>All Devices</h2>
+    </div>
+    <div class="col">
+            <h5>Total Energy Usage: {{ total_energy }}W</h5>
+    </div>
+</div>
 {% for type, devices in grouped_devices.items() %}
     <h3 class="mt-4">{{ type }}s</h3>
-    {% if type == 'Light' %}
+    {% if type == 'BasicLight' or type == 'ColourLight' %}
     <form method="POST" action="{{ url_for('turn_off_lights') }}">
         <button type="submit" style="margin-bottom: 10px;">Turn All Lights Off</button>
     </form>
@@ -28,8 +35,12 @@
                     <th>Temperature</th>
                 {% endif %}
 
-                {% if type == 'Light' %}
+                {% if type == 'BasicLight' or type == 'ColourLight' %}
                     <th>Brightness</th>
+                {% endif %}
+
+                {% if type == 'ColourLight' %}
+                    <th>Colour</th>
                 {% endif %}
 
                 <th>Actions</th>
@@ -50,22 +61,30 @@
                 {% if type == 'Thermostat' or type == 'Kettle' %}
                 <td>{{ device.temperature }}°C</td>
                 {% endif %}
-                {% if type == 'Light' %}
+                {% if type == 'BasicLight' or type== 'ColourLight' %}
                 <td>{{ device.brightness }}%</td>
                 {% endif %}
-                
+                {% if type== 'ColourLight' %}
+                <td>{{ device.colour }}</td>
+                {% endif %}
 
                 <td>
+                    {% if type == 'DoorLock' %}
+                    <form method="POST" action="{{ url_for('toggle_device', device_id=device.id) }}" style="display:inline;">
+                        <button class="btn btn-sm btn-danger">Lock/Unlock</button>
+                    </form>
+                    {% else %}
                     <form method="POST" action="{{ url_for('toggle_device', device_id=device.id) }}" style="display:inline;">
                         <button class="btn btn-sm btn-danger">Power</button>
                     </form>
+                    {% endif %}
                     <form method="POST" action="{{ url_for('device_info', device_id=device.id) }}" style="display:inline;">
                         <button class="btn btn-sm btn-warning">See More</button>
                     </form>
                     {% if device.type == 'Thermostat' or device.type == 'Kettle' %}
                         <a class="btn btn-sm btn-info" href="{{ url_for('update_temperature', device_id=device.id) }}">Set Temp</a>
                     {% endif %}
-                    {% if device.type == 'Light' %}
+                    {% if device.type == 'BasicLight' or device.type == 'ColourLight' %}
                         <a class="btn btn-sm btn-info" href="{{ url_for('update_brightness', device_id=device.id) }}">Set Brightness</a>
                     {% endif %}
                 </td>
@@ -75,7 +94,4 @@
     </table>
 {% endfor %}
 
-<div class="mt-4">
-    <h5>Total Energy Usage: {{ total_energy }}W</h5>
-</div>
 {% endblock %}

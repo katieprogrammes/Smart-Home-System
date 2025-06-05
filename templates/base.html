@@ -15,12 +15,24 @@
                         <a href="{{ url_for('home') }}"><h4>Home</h4></a>
                         <a href="{{ url_for('add_device') }}"><h4>Add Device</h4></a>
                         <a href="{{ url_for('view_all') }}"><h4>View Devices</h4></a>
-                        <a><h4>View Schedules</h4></a>
                     </nav>
                 </div>
             </div>
         </div>
     </header>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %} 
+    <div class="container-fluid" id="maincontent">
     {% block body %} {% endblock %}
+    </div>
+    <script src="/static/bootstrap.min.js"></script>
 </body>
 </html>

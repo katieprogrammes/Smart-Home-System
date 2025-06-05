@@ -44,4 +44,3 @@ def save_device(device):
         db.session.add(db_device)
     db.session.commit()
 
-

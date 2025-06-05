@@ -1,7 +1,7 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash
 from app import app
 from forms import *
-from database import db, Device
+from database import *
 from models import *
 from collections import defaultdict
 
@@ -108,22 +108,36 @@ def update_temperature(device_id):
 def update_brightness(device_id):
     device = Device.query.get_or_404(device_id)
 
-    if device.type not in ['Light']:
+    if device.type not in ('BasicLight', 'ColourLight'):
         return "Brightness can't be updated for this device.", 400
 
     form = UpdateBrightnessForm()
 
     if form.validate_on_submit():
         new_brightness = form.brightness.data
-        # Validating input
-        if device.type == 'Light' and not (0 <= new_brightness <= 100):
+        selected_colour = form.colour.data
+
+        # Basic validation
+        if not (0 <= new_brightness <= 100):
             return "Brightness must be between 0 and 100.", 400
 
-        device.brightness = new_brightness
-        db.session.commit()
-        return redirect(url_for('view_all'))
+        # Load the device model from row
+        smart_device = SmartDevice.from_db(device)
 
-    return render_template('update_brightness.html', form=form, device=device)
+        # Update brightness
+        smart_device.brightness = new_brightness
+
+        # Update colour if applicable
+        if hasattr(smart_device, "colour") and selected_colour:
+            try:
+                smart_device.colour = Colour[selected_colour.upper()]
+            except KeyError:
+                return "Invalid colour selected.", 400
+
+        save_device(smart_device)
+        flash("Changes Saved")
+        return redirect(url_for('view_all'))
+    return render_template('update_light.html', form=form, device=device)
 
 @app.route('/update_name/<int:device_id>', methods=['GET', 'POST'])
 def update_name(device_id):
@@ -146,9 +160,10 @@ def delete_device(device_id):
     db.session.commit()
     return redirect(url_for('view_all'))
 
+
 @app.route('/turn_off_lights', methods=['POST'])
 def turn_off_lights():
-    lights = Device.query.filter_by(type='Light').all()
+    lights = Device.query.filter(Device.type.in_(['BasicLight', 'ColouredLight'])).all()
     for light in lights:
         light.status = False
     db.session.commit()
@@ -156,7 +171,7 @@ def turn_off_lights():
 
 @app.route('/turn_on_lights', methods=['POST'])
 def turn_on_lights():
-    lights = Device.query.filter_by(type='Light').all()
+    lights = Device.query.filter(Device.type.in_(['BasicLight', 'ColouredLight'])).all()
     for light in lights:
         light.status = True
     db.session.commit()
@@ -170,3 +185,15 @@ def lock_all_doors():
     db.session.commit()
     return redirect(url_for('view_all'))
 
+@app.route('/maximum_security',  methods=['GET','POST'])
+def max_security():
+    locks = Device.query.filter_by(type='DoorLock').all()
+    for lock in locks:
+        lock.status = True
+    db.session.commit()
+    cameras = Device.query.filter_by(type='Camera').all()
+    for camera in cameras:
+        camera.status = True
+    db.session.commit()
+    flash("Maximum Security On")
+    return redirect(url_for('home'))

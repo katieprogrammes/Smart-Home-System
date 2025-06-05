@@ -1,5 +1,4 @@
 import os
-from tasks import *
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:

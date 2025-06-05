@@ -1,27 +1,37 @@
 {% extends "base.html" %}
 {% block body %}
-<h1> Add Device</h1>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.name.label }}<br>
-        {{ form.name(size=30) }}<br>
-        {% for error in form.name.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.type.label }}<br>
-        {{ form.type() }}
-    </p>
-    <p>
-        {{ form.temperature.label }}<br>
-        {{ form.temperature() }}
-    </p>
-    <p>
-        {{ form.brightness.label }}<br>
-        {{ form.brightness() }}
-    </p>
-    <p>{{ form.submit() }}</p>
-</form>
+<div class="row">
+    <div class="col"></div>
+    <div class="col addcont">
+        <h1> Add Device</h1>
+        <form method="POST" class="addform">
+            {{ form.hidden_tag() }}
+            <h4>
+                <label class="form-label">{{ form.name.label }}</label>
+                <br>
+                {{ form.name(size=30) }}<br>
+                {% for error in form.name.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </h4>
+            <h4>
+                <label class="form-label">{{ form.type.label }}</label>
+                <br>
+                {{ form.type() }}
+            </h4>
+            <h4>
+                <label class="form-label">{{ form.temperature.label }}</label>
+                    <br>
+                {{ form.temperature() }}
+            </h4>
+            <h4>
+                <label class="form-label">{{ form.brightness.label }}</label>
+                    <br>
+                {{ form.brightness() }}
+            </h4>
+            <h4>{{ form.submit() }}</h4>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
 {% endblock %}
