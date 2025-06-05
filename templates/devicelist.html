@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block body %}
 <br>
+<h1>All Devices</h1>
 <div class="row">
     <div class="col">
-        <h2>All Devices</h2>
     </div>
     <div class="col">
             <h5>Total Energy Usage: {{ total_energy }}W</h5>
@@ -85,7 +85,7 @@
                         <a class="btn btn-sm btn-info" href="{{ url_for('update_temperature', device_id=device.id) }}">Set Temp</a>
                     {% endif %}
                     {% if device.type == 'BasicLight' or device.type == 'ColourLight' %}
-                        <a class="btn btn-sm btn-info" href="{{ url_for('update_brightness', device_id=device.id) }}">Set Brightness</a>
+                        <a class="btn btn-sm btn-info" href="{{ url_for('update_brightness', device_id=device.id) }}">Change</a>
                     {% endif %}
                 </td>
             </tr>

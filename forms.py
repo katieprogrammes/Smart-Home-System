@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, IntegerField, SubmitField, DateTimeField
+from wtforms import StringField, SelectField, IntegerField, SubmitField
 from wtforms.validators import DataRequired, Optional
 from models import Colour
 
@@ -17,7 +17,7 @@ class UpdateTemperatureForm(FlaskForm):
 class UpdateBrightnessForm(FlaskForm):
     brightness = IntegerField('Set Brightness', validators=[DataRequired()])
     colour = SelectField('Set Colour (optional)', choices=[(c.name, c.value.title()) for c in Colour], validators=[Optional()])
-    submit = SubmitField('Update Brightness')
+    submit = SubmitField('Save Changes')
 
 class UpdateNameForm(FlaskForm):
     name = StringField('Device Name', validators=[DataRequired()])

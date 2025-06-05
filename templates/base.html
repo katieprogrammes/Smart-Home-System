@@ -2,7 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
     <title>Smart Home</title>
+    {% endif %}
     <link href="/static/bootstrap.min.css" rel="stylesheet">
     <link href="/static/style.css" rel="stylesheet">
 </head> 
