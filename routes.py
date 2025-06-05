@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for
 from app import app
-from forms import AddDeviceForm, UpdateTemperatureForm, UpdateBrightnessForm, UpdateNameForm
+from forms import *
 from database import db, Device
 from models import *
 from collections import defaultdict
@@ -39,12 +39,15 @@ def view_all():
         grouped_devices[dev.type].append(dev)
 
         obj = None
-        if dev.type == 'Light':
-            obj = Light(dev.name, dev.brightness, dev.status)
+        if dev.type == 'BasicLight':
+            obj = BasicLight(dev.name, dev.brightness, Colour.DEFAULT, dev.status)
+        elif dev.type == 'ColourLight':
+            colour_enum = colour_from_string(dev.colour)
+            obj = ColourLight(dev.name, dev.brightness, colour_enum, dev.status)
         elif dev.type == 'Thermostat':
             obj = Thermostat(dev.name, temperature=dev.temperature or 20, status=dev.status)
         elif dev.type == 'Kettle':
-            obj = Kettle(dev.name, setTemp=dev.temperature or 100, status=dev.status)
+            obj = Kettle(dev.name, set_temp=dev.temperature or 100, status=dev.status)
         elif dev.type == 'Camera':
             obj = Camera(dev.name, dev.status)
         elif dev.type == 'DoorLock':
@@ -166,3 +169,4 @@ def lock_all_doors():
         lock.status = True
     db.session.commit()
     return redirect(url_for('view_all'))
+

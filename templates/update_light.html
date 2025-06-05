@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 {% block body %}
-<h2>Update Brightness - {{ device.name }}</h2>
+<h2>Update Brightness for {{ device.name }}</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
     <div class="mb-3">
         {{ form.brightness.label(class="form-label") }}
         {{ form.brightness(class="form-control", value=device.brightness or '') }}
+    </div>
+
+    <div class="mb-3">
+        {% if device.type == 'ColourLight' %}
+            {{ form.colour.label }} {{ form.colour() }}
+        {% endif %}
     </div>
     <button type="submit" class="btn btn-success">{{ form.submit.label.text }}</button>
 </form>
