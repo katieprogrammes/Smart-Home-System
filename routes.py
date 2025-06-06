@@ -88,7 +88,7 @@ def update_temperature(device_id):
     device = Device.query.get_or_404(device_id)
 
     if device.type not in ['Thermostat', 'Kettle', 'Boiler']:
-        return "Temperature can't be updated for this device.", 400
+        raise InvalidDeviceTypeError("Temperature can't be updated for this device.")
 
     form = UpdateTemperatureForm()
 
@@ -96,11 +96,14 @@ def update_temperature(device_id):
         new_temp = form.temperature.data
         # Validating input
         if device.type == 'Thermostat' and not (10 <= new_temp <= 30):
-            return "Temperature must be between 10 and 30 for a thermostat.", 400
+            flash("Temperature must be between 10 and 30 for a Thermostat.", "error")
+            return redirect(url_for('update_temperature', device_id=device.id))
         if device.type == 'Kettle' and not (50 <= new_temp <= 100):
-            return "Temperature must be between 50 and 100 for a kettle.", 400
+            flash("Temperature must be between 50 and 100 for a Kettle.", "error")
+            return redirect(url_for('update_temperature', device_id=device.id))
         if device.type == 'Boiler' and not (40 <= new_temp <= 60):
-            return "Temperature must be between 40 and 60 for a kettle.", 400
+            flash("Temperature must be between 40 and 60 for a Kettle.", "error")
+            return redirect(url_for('update_temperature', device_id=device.id))
 
         device.temperature = new_temp
         db.session.commit()
@@ -113,7 +116,7 @@ def update_light(device_id):
     device = Device.query.get_or_404(device_id)
 
     if device.type not in ('BasicLight', 'ColourLight'):
-        return "Brightness can't be updated for this device.", 400
+        raise InvalidDeviceTypeError("Brightness can't be updated for this device.")
 
     form = UpdateBrightnessForm()
 
@@ -123,7 +126,9 @@ def update_light(device_id):
 
         # Basic validation
         if not (0 <= new_brightness <= 100):
-            return "Brightness must be between 0 and 100.", 400
+            flash("Brightness must be between 0 and 100.", "error")
+            return redirect(url_for('update_light', device_id=device.id))
+
 
         # Update brightness
         device.brightness = new_brightness
@@ -133,7 +138,7 @@ def update_light(device_id):
             try:
                 device.colour = Colour[selected_colour.upper()]
             except KeyError:
-                return "Invalid colour selected.", 400
+                raise InvalidDeviceTypeError("Invalid colour selected.")
 
         db.session.commit()
         flash("Changes Saved")
@@ -322,3 +327,8 @@ def edit_job(job_id):
         return redirect(url_for('viewtasks'))
 
     return render_template('schedule.html', form=form, editing=True)
+
+#Error Handling
+@app.errorhandler(InvalidDeviceTypeError)
+def handle_invalid_device_type(error):
+    return render_template('error.html', message=error.message), 400

@@ -257,3 +257,8 @@ class SmartHomeSystem:
     def show_devices(self):
         for device in self._devices:
             print(device)
+
+#Error Handling
+class InvalidDeviceTypeError(Exception):
+    def __init__(self, message):
+        self.message = message
