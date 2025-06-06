@@ -1,0 +1,63 @@
+
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4 schedcont">
+            <h2>Scheduled Device Tasks</h2>
+            <ul>
+            {% for job in jobs %}
+                {% set parts = job.id.split('_') %}
+                {% set device_id = parts[0] %}
+                {% if parts|length == 4 %}
+                    {% set action = parts[1] ~ '_' ~ parts[2] %}
+                    {% set value = None %}
+                    {% set time_str = parts[3] %}
+                {% elif parts|length == 5 %}
+                    {% set action = parts[1] ~ '_' ~ parts[2] %}
+                    {% set value = parts[3] %}
+                    {% set time_str = parts[4] %}
+                {% elif parts|length == 3 %}
+                    {% set action = parts[1] %}
+                    {% set value = None %}
+                    {% set time_str = parts[2] %}
+                {% elif parts|length == 4 %}
+                    {% set action = parts[1] %}
+                    {% set value = parts[2] %}
+                    {% set time_str = parts[3] %}
+                {% endif %}
+
+                <li>
+                    <strong>Device:</strong> {{ device_lookup[device_id] }},
+                    <strong>Action:</strong>
+                    {% if action == 'on' or action == 'off' %}
+                        Turn {{ action|capitalize }}
+                    {% elif action == 'set_brightness' %}
+                        Set Brightness to {{ value }}
+                    {% elif action == 'set_temperature' %}
+                        Set Temperature to {{ value }}
+                    {% else %}
+                        {{ action }} {% if value %} to {{ value }}{% endif %}
+                    {% endif %}
+                    <br>
+                    <strong>Scheduled Time:</strong>
+                        {% if job.next_run_time %}
+                            {{ job.next_run_time.strftime('%d-%m-%Y %H:%M:%S') }}
+                        {% else %}
+                            Already executed or expired
+                        {% endif %}
+                    <br>
+                    <a>[Edit]</a>
+                    <a>[Delete]</a>
+                </li>
+            {% endfor %}
+            </ul>
+            <div">  
+                <a href="{{ url_for('schedule') }}" class="btn btn-info">Schedule New Task</a>
+            </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    {% endblock %}
+

@@ -21,26 +21,18 @@ def get_all_devices():
 def get_device_by_id(device_id):
     return Device.query.get(device_id)
 
-def save_device(device):
-    db_device = Device.query.filter_by(name=device.name).first()
-    if db_device:
-        db_device.status = device.is_on
-        if hasattr(device, "get_temperature"):
-            db_device.temperature = device.temperature
-        if hasattr(device, "brightness"):
-            db_device.brightness = device.brightness
-        if hasattr(device, "colour"):
-            db_device.colour = device.colour.name      
-    else:
-        # Create new device
-        db_device = Device(
-            name=device.name,
-            type=device.type, 
-            status=device.is_on,
-            temperature=getattr(device, "temperature", None),
-            brightness=getattr(device, "brightness", None),
-            colour=getattr(device.colour, "name", None) if hasattr(device, "colour") else None
-        )
-        db.session.add(db_device)
+def save_device(device_id, device):
+    db_device = Device.query.get(device_id)
+    if not db_device:
+        raise ValueError(f"No device found in DB with ID {device_id}")
+
+    db_device.status = device.is_on
+    if hasattr(device, "temperature"):
+        db_device.temperature = device.temperature
+    if hasattr(device, "brightness"):
+        db_device.brightness = device.brightness
+    if hasattr(device, "colour") and device.colour:
+        db_device.colour = device.colour.name
+
     db.session.commit()
 

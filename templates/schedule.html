@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="row">
+    <div class="col"></div>
+    <div class="col-8 schedcont">
+        {% if editing %}
+        <h1>Editing Scheduled Task</h1>
+        {% else %}
+        <h1>Schedule a New Task</h1>
+        {% endif %}
+        <form method="POST" class="schedform">
+            {{ form.hidden_tag() }}
+            <h5>
+                <label class="form-label">{{ form.device_id.label }}</label>
+                <br>
+                {{ form.device_id(size=1) }}
+            </h5>
+            <h5>
+                <label class="form-label">{{ form.action.label }}</label>
+                <br>
+                {{ form.action() }}
+            </h5>
+            <h5>
+                <label class="form-label" >{{ form.value.label }}</label>
+                <br>
+                {{ form.value() }}
+            </h5>
+            <h5>
+                <label class="form-label">{{ form.colour.label }}</label>
+                <br>
+                {{ form.colour() }}
+            </h5>
+            <h5>
+                <label class="form-label">{{ form.schedule_time.label }}</label>
+                <br>
+                {{ form.schedule_time(size=30) }}
+            </h5>
+            {{ form.submit(class="btn btn-info") }}
+        </form>
+        <a href="{{ url_for('viewtasks') }} " class="btn btn-outline-secondary">View Scheduled Tasks</a>
+    </div>
+    <div class="col"></div>
+</div>
+{% endblock %}
