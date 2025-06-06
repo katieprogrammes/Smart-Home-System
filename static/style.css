@@ -12,6 +12,9 @@ nav a {
 body {
     background-color: #CCCCFF;
 }
+strong {
+    color: navy;
+}
 .title {
     text-align: center;
     padding-bottom: 40px;
@@ -85,13 +88,16 @@ body {
     width: auto;
 }
 .schedcont a {
-    font-weight: 800;
     font-size: 24px;
     font-weight: 600;
     height: 50px;
     width: auto;
-    color: black;
-    background-color: #0d6efd;
+}
+.schedcont ul {
+    list-style: none;
+}
+.schedcont li {
+    padding-bottom: 20px;
 }
 .devinfo {
     padding-bottom: 20px;
