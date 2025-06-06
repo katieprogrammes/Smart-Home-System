@@ -144,6 +144,25 @@ class ColourLight(SuperLight, SmartDevice):
     def get_energy_usage(self):
         return 5 if self._status else 0
 
+class Kettle(SmartDevice):
+    def __init__(self, name, set_temp, status=False):
+        super().__init__(name, status)
+        self._set_temp = set_temp
+
+    @property
+    def set_temp(self):
+        return self._set_temp
+
+    @set_temp.setter
+    def set_temp(self, temp):
+        if 50 <= temp <= 100:
+            self._set_temp = temp
+        else:
+            raise ValueError("Temperature must be between 50 and 100")
+
+    def get_energy_usage(self):
+        return 20 if self._status else 0
+    
 class Thermostat(SmartDevice):
     def __init__(self, name, temperature=20, status=False):
         super().__init__(name, status)
@@ -163,6 +182,25 @@ class Thermostat(SmartDevice):
     def get_energy_usage(self):
         return 50 if self._status else 0
 
+class Boiler(SmartDevice):
+    def __init__(self, name, temperature=20, status=False):
+        super().__init__(name, status)
+        self._temperature = temperature
+
+    @property
+    def temperature(self):
+        return self._temperature
+
+    @temperature.setter
+    def temperature(self, temp):
+        if 40 <= temp <= 60:
+            self._temperature = temp
+        else:
+            raise ValueError("Temperature must be between 40 and 60")
+
+    def get_energy_usage(self):
+        return 50 if self._status else 0
+
 
 class Camera(SmartDevice):
     def __init__(self, name, status=False):
@@ -178,26 +216,6 @@ class DoorLock(SmartDevice):
 
     def get_energy_usage(self):
         return 2 if self._status else 0
-
-
-class Kettle(SmartDevice):
-    def __init__(self, name, set_temp, status=False):
-        super().__init__(name, status)
-        self._set_temp = set_temp
-
-    @property
-    def set_temp(self):
-        return self._set_temp
-
-    @set_temp.setter
-    def set_temp(self, temp):
-        if 50 <= temp <= 100:
-            self._set_temp = temp
-        else:
-            raise ValueError("Temperature must be between 50 and 100")
-
-    def get_energy_usage(self):
-        return 20 if self._status else 0
 
 class Appliance(SmartDevice):
     def __init__(self, name, status=False):

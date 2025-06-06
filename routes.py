@@ -44,10 +44,10 @@ def view_all():
         elif dev.type == 'ColourLight':
             colour_enum = colour_from_string(dev.colour)
             obj = ColourLight(dev.name, dev.brightness, colour_enum, dev.status)
-        elif dev.type == 'Thermostat':
-            obj = Thermostat(dev.name, temperature=dev.temperature or 20, status=dev.status)
         elif dev.type == 'Kettle':
             obj = Kettle(dev.name, set_temp=dev.temperature or 100, status=dev.status)
+        elif dev.type == 'Thermostat':
+            obj = Thermostat(dev.name, temperature=dev.temperature or 20, status=dev.status)
         elif dev.type == 'Camera':
             obj = Camera(dev.name, dev.status)
         elif dev.type == 'DoorLock':
@@ -97,13 +97,13 @@ def update_temperature(device_id):
             return "Temperature must be between 50 and 100 for a kettle.", 400
 
         device.temperature = new_temp
-        db.session.commit()
+        save_device(device)
+        flash("Changes Saved")
         return redirect(url_for('view_all'))
-
     return render_template('update_temperature.html', form=form, device=device, title='Update Temperature')
 
-@app.route('/update_brightness/<int:device_id>', methods=['GET', 'POST'])
-def update_brightness(device_id):
+@app.route('/update_light/<int:device_id>', methods=['GET', 'POST'])
+def update_light(device_id):
     device = Device.query.get_or_404(device_id)
 
     if device.type not in ('BasicLight', 'ColourLight'):

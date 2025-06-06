@@ -12,6 +12,10 @@ nav a {
 body {
     background-color: #CCCCFF;
 }
+.title {
+    text-align: center;
+    padding-bottom: 40px;
+}
 #maincontent {
     padding-top: 4px;
 }
@@ -88,4 +92,20 @@ body {
     width: auto;
     color: black;
     background-color: #0d6efd;
+}
+.devinfo {
+    padding-bottom: 20px;
+}
+.infodel,
+.devbutt {
+    display: flex;
+    justify-content: center;
+}
+.infodel {
+    padding-top: 20px;
+}
+.updating,
+.upbutt {
+    display: flex;
+    justify-content: center;
 }

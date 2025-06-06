@@ -1,62 +1,80 @@
 {% extends 'base.html' %}
 {% block body %}
-<h1>Device Information</h1>
-<div class="row">
+<h1 class="title">Device Information</h1>
+<div class="row devinfo">
+    <div class="col"></div>
     <div class="col">
-        <h3>Name</h3>
+        <h3>Name:</h3>
     </div>
     <div class="col">
         <h3>{{ device.name }}</h3>
     </div>
-    <div class="col">
+    <div class="col devbutt">
         <form method="POST" action="{{ url_for('update_name', device_id=device.id) }}">
-            <button class="btn btn-sm btn-warning">Edit</button>
+            <button class="btn btn-sm btn-warning"><h4>Edit</h4></button>
         </form>
     </div>
 </div>
-<div class="row">
+<div class="row devinfo">
+    <div class="col"></div>
     <div class="col">
-        <h3>Device Type</h3>
+        <h3>Device Type:</h3>
     </div>
     <div class="col">
         <h3>{{device.type}}</h3>
     </div>
     <div class="col"></div>
 </div>
-{% if device.type == 'Light' %}
-<div class="row">
+{% if device.type == 'ColourLight' or device.type == 'BasicLight' %}
+<div class="row devinfo">
+    <div class="col"></div>
     <div class="col">
-        <h3>Brightness</h3>
+        <h3>Brightness:</h3>
     </div>
     <div class="col">
         <h3>{{device.brightness}}</h3>
     </div>
+    <div class="col devbutt">
+        <a class="btn btn-sm btn-info" href="{{ url_for('update_light', device_id=device.id) }}"><h4>Change</h4></a>
+    </div>
+</div>
+{% endif %}
+{% if device.type == 'ColourLight'%}
+<div class="row devinfo">
+    <div class="col"></div>
     <div class="col">
-        <a class="btn btn-sm btn-info" href="{{ url_for('update_brightness', device_id=device.id) }}">Change</a>
+        <h3>Colour:</h3>
+    </div>
+    <div class="col">
+        <h3>{{device.colour}}</h3>
+    </div>
+    <div class="col devbutt">
+        <a class="btn btn-sm btn-info" href="{{ url_for('update_light', device_id=device.id) }}"><h4>Change</h4></a>
     </div>
 </div>
 {% endif %}
 
 {% if device.type == 'Thermostat' or device.type == 'Kettle' %}
-<div class="row">
+<div class="row devinfo">
+    <div class="col"></div>
     <div class="col">
-        <h3>Temperature</h3>
+        <h3>Temperature:</h3>
     </div>
     <div class="col">
         <h3>{{device.temperature}}</h3>
     </div>
-    <div class="col">
-        <a class="btn btn-sm btn-info" href="{{ url_for('update_temperature', device_id=device.id) }}">Change</a>
+    <div class="col devbutt">
+        <a class="btn btn-sm btn-info" href="{{ url_for('update_temperature', device_id=device.id) }}"><h4>Change</h4></a>
     </div>
 </div>
 {% endif %}
 <div class="row">
-    <div class="col"></div>
-    <div class="col">
+    <div class="col-4"></div>
+    <div class="col-4 infodel">
         <form method="POST" action="{{ url_for('delete_device', device_id=device.id) }}">
-            <button class="btn btn-sm btn-danger">DELETE</button>
+            <button class="btn btn-sm btn-danger"><h3>DELETE</h3></button>
         </form>
     </div>
-    <div class="col"></div>
+    <div class="col-4"></div>
 </div>
 {% endblock %}

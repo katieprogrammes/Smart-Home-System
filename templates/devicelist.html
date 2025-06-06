@@ -1,29 +1,46 @@
 {% extends 'base.html' %}
 {% block body %}
-<br>
-<h1>All Devices</h1>
 <div class="row">
     <div class="col">
+        <h1>All Devices</h1>
     </div>
+    <div class="col"></div>
     <div class="col">
-            <h5>Total Energy Usage: {{ total_energy }}W</h5>
+        <h5>Total Energy Usage: {{ total_energy }}W</h5>
     </div>
 </div>
 {% for type, devices in grouped_devices.items() %}
-    <h3 class="mt-4">{{ type }}s</h3>
-    {% if type == 'BasicLight' or type == 'ColourLight' %}
-    <form method="POST" action="{{ url_for('turn_off_lights') }}">
-        <button type="submit" style="margin-bottom: 10px;">Turn All Lights Off</button>
-    </form>
-    <form method="POST" action="{{ url_for('turn_on_lights') }}">
-        <button type="submit" style="margin-bottom: 10px;">Turn All Lights On</button>
-    </form>
-    {% endif %}
-    {% if type == 'DoorLock' %}
-    <form method="POST" action="{{ url_for('lock_all_doors') }}">
-        <button type="submit" style="margin-bottom: 10px;">Lock All Doors</button>
-    </form>
-    {% endif %}
+<div class="row">
+    <div class="col">
+        <h3 class="mt-4">{{ type }}s</h3>
+    </div>
+    <div class="col">
+        {% if type == 'BasicLight' or type == 'ColourLight' %}
+        <div class="row">
+            <div class="col">
+                <form method="POST" action="{{ url_for('turn_off_lights') }}">
+                    <button type="submit" style="margin-bottom: 10px;">Turn All Lights Off</button>
+                </form>
+            </div>
+            <div class="col">
+                <form method="POST" action="{{ url_for('turn_on_lights') }}">
+                    <button type="submit" style="margin-bottom: 10px;">Turn All Lights On</button>
+                </form>
+                {% endif %}
+                {% if type == 'DoorLock' %}
+                <form method="POST" action="{{ url_for('lock_all_doors') }}">
+                    <button type="submit" style="margin-bottom: 10px;">Lock All Doors</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col"></div>
+</div>
     <table class="table table-striped table-bordered">
         <thead class="table-dark">
             <tr>
@@ -85,7 +102,7 @@
                         <a class="btn btn-sm btn-info" href="{{ url_for('update_temperature', device_id=device.id) }}">Set Temp</a>
                     {% endif %}
                     {% if device.type == 'BasicLight' or device.type == 'ColourLight' %}
-                        <a class="btn btn-sm btn-info" href="{{ url_for('update_brightness', device_id=device.id) }}">Change</a>
+                        <a class="btn btn-sm btn-info" href="{{ url_for('update_light', device_id=device.id) }}">Change</a>
                     {% endif %}
                 </td>
             </tr>
