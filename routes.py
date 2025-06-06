@@ -223,7 +223,7 @@ def schedule():
         elif action == "set_brightness" or action == "set_temperature":
             value = form.value.data 
         else:
-            value = 0
+            value = None
 
         # Compose job ID
         job_id_parts = [device_id, action]

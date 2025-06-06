@@ -3,7 +3,7 @@ from database import Device, get_device_by_id, save_device
 from models import *
 from app import app
 
-def control_device(device_id, action, value):
+def control_device(device_id, action, value=None):
     with app.app_context():
         device_row = get_device_by_id(device_id)
         device = SmartDevice.from_db(device_row)
