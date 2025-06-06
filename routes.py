@@ -27,6 +27,7 @@ def add_device():
         )
         db.session.add(device)
         db.session.commit()
+        flash("Device Added")
         return redirect(url_for('view_all'))
     return render_template('add.html', form=form, title='Add Device')
 
@@ -155,6 +156,7 @@ def update_name(device_id):
         new_name = form.name.data
         device.name = new_name
         db.session.commit()
+        flash('Changes Saved')
         return redirect(url_for('view_all'))
 
     return render_template('update_name.html', form=form, device=device, title='Change Name')
@@ -164,6 +166,7 @@ def delete_device(device_id):
     device = Device.query.get_or_404(device_id)
     db.session.delete(device)
     db.session.commit()
+    flash('Device Deleted')
     return redirect(url_for('view_all'))
 
 
@@ -173,6 +176,7 @@ def turn_off_lights():
     for light in lights:
         light.status = False
     db.session.commit()
+    flash('All Lights Off')
     return redirect(url_for('view_all'))
 
 @app.route('/turn_on_lights', methods=['POST'])
@@ -181,6 +185,7 @@ def turn_on_lights():
     for light in lights:
         light.status = True
     db.session.commit()
+    flash('All Lights On')
     return redirect(url_for('view_all'))
 
 @app.route('/lock_all_doors', methods=['POST'])
@@ -189,6 +194,7 @@ def lock_all_doors():
     for lock in locks:
         lock.status = True
     db.session.commit()
+    flash('Doors Locked')
     return redirect(url_for('view_all'))
 
 @app.route('/maximum_security',  methods=['GET','POST'])
