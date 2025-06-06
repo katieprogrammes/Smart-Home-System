@@ -12,7 +12,12 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 #Scheduling
-scheduler = BackgroundScheduler()
+scheduler = BackgroundScheduler({
+    'apscheduler.jobstores.default': {
+        'type': 'sqlalchemy',
+        'url': 'sqlite:///jobs.sqlite'
+    }
+})
 scheduler.start()
 
 # Run the app and create database

@@ -28,5 +28,5 @@ class ScheduleForm(FlaskForm):
     action = SelectField('Action', choices=[('on', 'Turn On'), ('off', 'Turn Off'), ('set_brightness', 'Set Brightness'), ('set_temperature', 'Set Temperature'), ('set_colour', 'Set Colour')], validators=[DataRequired()])
     value = IntegerField('Value (for temperature or brightness)', validators=[Optional()])
     colour = SelectField('Set Colour (if applicable)', choices=[(c.name, c.value.title()) for c in Colour], validators=[Optional()])
-    schedule_time = DateTimeField('Schedule Time', format='%d-%m-%Y %H:%M:%S', validators=[DataRequired()])
+    schedule_time = DateTimeField('Schedule Time', format='%Y-%m-%d %H:%M:%S', validators=[DataRequired()])
     submit = SubmitField('Schedule Task')

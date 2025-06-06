@@ -1,10 +1,11 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from app import app, scheduler
 from forms import *
 from database import *
 from models import *
 from tasks import *
 from collections import defaultdict
+from datetime import datetime
 
 
 
@@ -219,7 +220,7 @@ def schedule():
 
         if action == "set_colour":
             value = form.colour.data
-        elif action == "set_brightness" or action == "set temperature":
+        elif action == "set_brightness" or action == "set_temperature":
             value = form.value.data 
         else:
             value = 0
@@ -228,7 +229,7 @@ def schedule():
         job_id_parts = [device_id, action]
         if value is not None:
             job_id_parts.append(str(value))
-        job_id_parts.append(schedule_time.strftime('%d%m%Y%H%M%S'))
+        job_id_parts.append(schedule_time.strftime('%Y%m%d%H%M%S'))
         job_id = "_".join(job_id_parts)
 
         args = [device_id, action]
@@ -252,3 +253,72 @@ def schedule():
         flash('Task scheduled!')
         return redirect(url_for('viewtasks'))
     return render_template('schedule.html', form=form)
+
+@app.route('/delete_job/<job_id>')
+def delete_job(job_id):
+    print("Jobs before delete:", [job.id for job in scheduler.get_jobs()])
+    scheduler.remove_job(job_id)  # without jobstore param
+    print("Jobs after delete:", [job.id for job in scheduler.get_jobs()])
+    flash('Job deleted successfully.')
+    return redirect(url_for('viewtasks'))
+
+@app.route('/edit_job/<job_id>', methods=['GET', 'POST'])
+def edit_job(job_id):
+    form = ScheduleForm()
+
+    # Split Job ID Format
+    parts = job_id.split('_')
+    if len(parts) not in [3, 4]:
+        flash('Invalid job format.')
+        return redirect(url_for('viewtasks'))
+
+    # Parse Parts
+    if len(parts) == 4:
+        device_id, action, value, time_str = parts
+    else:
+        device_id, action, time_str = parts
+        value = None
+
+    schedule_time = datetime.strptime(time_str, '%Y%m%d%H%M%S')
+
+    #Populate Device Choices
+    devices = get_all_devices()
+    form.device_id.choices = [(str(d.id), d.name) for d in devices]
+
+    if request.method == 'GET':
+        form.device_id.data = device_id
+        form.action.data = action
+        form.schedule_time.data = schedule_time
+        if value is not None:
+            form.value.data = value
+
+    if form.validate_on_submit():
+        # Remove old job
+        scheduler.remove_job(job_id)
+
+        # Build new job ID
+        new_parts = [form.device_id.data, form.action.data]
+        if form.value.data is not None:
+            new_parts.append(str(form.value.data))
+        new_parts.append(form.schedule_time.data.strftime('%Y%m%d%H%M%S'))
+        new_job_id = "_".join(new_parts)
+
+        # Build new args
+        new_args = [form.device_id.data, form.action.data]
+        if form.value.data is not None:
+            new_args.append(form.value.data)
+
+        # Add new job
+        scheduler.add_job(
+            id=new_job_id,
+            func=control_device,
+            args=new_args,
+            trigger='date',
+            run_date=form.schedule_time.data,
+            replace_existing=True
+        )
+
+        flash('Job updated successfully.')
+        return redirect(url_for('viewtasks'))
+
+    return render_template('schedule.html', form=form, editing=True)
