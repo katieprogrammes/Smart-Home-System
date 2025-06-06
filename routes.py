@@ -45,7 +45,9 @@ def view_all():
             colour_enum = colour_from_string(dev.colour)
             obj = ColourLight(dev.name, dev.brightness, colour_enum, dev.status)
         elif dev.type == 'Kettle':
-            obj = Kettle(dev.name, set_temp=dev.temperature or 100, status=dev.status)
+            obj = Kettle(dev.name, temperature=dev.temperature or 100, status=dev.status)
+        elif dev.type == 'Boiler':
+            obj = Boiler(dev.name, temperature=dev.temperature or 50, status=dev.status)
         elif dev.type == 'Thermostat':
             obj = Thermostat(dev.name, temperature=dev.temperature or 20, status=dev.status)
         elif dev.type == 'Camera':

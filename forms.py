@@ -5,7 +5,7 @@ from models import Colour
 
 class AddDeviceForm(FlaskForm):
     name = StringField('Device Name', validators=[DataRequired()])
-    type = SelectField('Device Type', choices=[('BasicLight' , 'Light'), ('ColourLight', 'Multi-Coloured Light'), ('Thermostat', 'Thermostat'), ('Camera', 'Security Camera'), ('DoorLock', 'Door Lock'), ('Kettle', 'Kettle'), ('Appliance', 'Appliance')])
+    type = SelectField('Device Type', choices=[('BasicLight' , 'Light'), ('ColourLight', 'Multi-Coloured Light'), ('Thermostat', 'Thermostat'), ('Camera', 'Security Camera'), ('DoorLock', 'Door Lock'), ('Kettle', 'Kettle'), ('Boiler', 'Boiler'), ('Appliance', 'Appliance')])
     temperature = IntegerField('Temperature (if needed)', validators=[Optional()])
     brightness = IntegerField('Set Brightness (if needed)', validators=[Optional()])
     submit = SubmitField('Add Device')

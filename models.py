@@ -54,6 +54,23 @@ class SuperLight:
         else:
             raise ValueError("Brightness must be between 0 and 100")
 
+#Temperature Base Class
+class SuperTemp:
+    def __init__(self, temperature):
+        self._temperature = 0
+        self.temperature = temperature 
+
+    @property
+    def temperature(self):
+        return self._temperature
+    
+    @temperature.setter
+    def temperature(self, value):
+        if 0 <= value <= 100:
+            self._temperature = value
+        else:
+            raise ValueError("Temperature must be between 0 and 100")
+
 #Device Base Class
 class SmartDevice(ABC):
     total_devices = 0  
@@ -107,7 +124,9 @@ class SmartDevice(ABC):
         elif device_type == 'DoorLock':
             return DoorLock(name, status)
         elif device_type == 'Kettle':
-            return Kettle(name, set_temp=temp, status=status)
+            return Kettle(name, temperature=temp, status=status)
+        elif device_type == 'Boiler':
+            return Boiler(name, temperature=temp, status=status)
         elif device_type == 'Appliance':
             return Appliance(name, status)
         else:
@@ -144,59 +163,47 @@ class ColourLight(SuperLight, SmartDevice):
     def get_energy_usage(self):
         return 5 if self._status else 0
 
-class Kettle(SmartDevice):
-    def __init__(self, name, set_temp, status=False):
-        super().__init__(name, status)
-        self._set_temp = set_temp
+class Kettle(SuperTemp, SmartDevice):
+    def __init__(self, name, temperature, status=False):
+        SmartDevice.__init__(self, name, status)
+        SuperTemp.__init__(self, temperature)
 
-    @property
-    def set_temp(self):
-        return self._set_temp
-
-    @set_temp.setter
-    def set_temp(self, temp):
-        if 50 <= temp <= 100:
-            self._set_temp = temp
+    @SuperTemp.temperature.setter
+    def temperature(self, value):
+        if 60 <= value <= 100:
+            self._temperature = value
         else:
-            raise ValueError("Temperature must be between 50 and 100")
+            raise ValueError("Temperature must be between 60 and 100")    
 
     def get_energy_usage(self):
         return 20 if self._status else 0
     
-class Thermostat(SmartDevice):
-    def __init__(self, name, temperature=20, status=False):
-        super().__init__(name, status)
-        self._temperature = temperature
+class Thermostat(SuperTemp, SmartDevice):
+    def __init__(self, name, temperature, status=False):
+        SmartDevice.__init__(self, name, status)
+        SuperTemp.__init__(self, temperature)
 
-    @property
-    def temperature(self):
-        return self._temperature
-
-    @temperature.setter
-    def temperature(self, temp):
-        if 10 <= temp <= 30:
-            self._temperature = temp
+    @SuperTemp.temperature.setter
+    def temperature(self, value):
+        if 10 <= value <= 30:
+            self._temperature = value
         else:
-            raise ValueError("Temperature must be between 10 and 30")
-
+            raise ValueError("Temperature must be between 10 and 30")   
+         
     def get_energy_usage(self):
         return 50 if self._status else 0
 
-class Boiler(SmartDevice):
-    def __init__(self, name, temperature=20, status=False):
-        super().__init__(name, status)
-        self._temperature = temperature
+class Boiler(SuperTemp, SmartDevice):
+    def __init__(self, name, temperature, status=False):
+        SmartDevice.__init__(self, name, status)
+        SuperTemp.__init__(self, temperature)
 
-    @property
-    def temperature(self):
-        return self._temperature
-
-    @temperature.setter
-    def temperature(self, temp):
-        if 40 <= temp <= 60:
-            self._temperature = temp
+    @SuperTemp.temperature.setter
+    def temperature(self, value):
+        if 40 <= value <= 60:
+            self._temperature = value
         else:
-            raise ValueError("Temperature must be between 40 and 60")
+            raise ValueError("Temperature must be between 40 and 60")    
 
     def get_energy_usage(self):
         return 50 if self._status else 0
