@@ -7,24 +7,15 @@
             <ul>
                 {% if jobs %}
                     {% for job in jobs %}
-                        {% set parts = job.id.split('_') %}
+                        {% set parts = job.id.split('|') %}
                         {% set device_id = parts[0] %}
+                        {% set action = parts[1] %}
                         {% if parts|length == 4 %}
-                            {% set action = parts[1] ~ '_' ~ parts[2] %}
-                            {% set value = None %}
-                            {% set time_str = parts[3] %}
-                        {% elif parts|length == 5 %}
-                            {% set action = parts[1] ~ '_' ~ parts[2] %}
-                            {% set value = parts[3] %}
-                            {% set time_str = parts[4] %}
-                        {% elif parts|length == 3 %}
-                            {% set action = parts[1] %}
-                            {% set value = None %}
-                            {% set time_str = parts[2] %}
-                        {% elif parts|length == 4 %}
-                            {% set action = parts[1] %}
                             {% set value = parts[2] %}
                             {% set time_str = parts[3] %}
+                        {% else %}
+                            {% set value = None %}
+                            {% set time_str = parts[2] %}
                         {% endif %}
 
                         <li>
@@ -46,7 +37,7 @@
                                         {% elif action == 'set_temperature' %}
                                             Set Temperature to {{ value }}
                                         {% elif action == 'set_colour' %}
-                                            Change Colour to {{ value }}
+                                            Change Colour to {{ value|capitalize }}
                                         {% else %}
                                             {{ action }} {% if value %} to {{ value }}{% endif %}
                                         {% endif %}

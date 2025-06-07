@@ -241,7 +241,7 @@ def schedule():
         if value is not None:
             job_id_parts.append(str(value))
         job_id_parts.append(schedule_time.strftime('%Y%m%d%H%M%S'))
-        job_id = "_".join(job_id_parts)
+        job_id = "|".join(job_id_parts)
 
         args = [device_id, action]
         if value is not None:
@@ -278,12 +278,11 @@ def edit_job(job_id):
     form = ScheduleForm()
 
     # Split Job ID Format
-    parts = job_id.split('_')
+    parts = job_id.split('|')
     if len(parts) not in [3, 4]:
         flash('Invalid job format.')
         return redirect(url_for('viewtasks'))
 
-    # Parse Parts
     if len(parts) == 4:
         device_id, action, value, time_str = parts
     else:
@@ -300,32 +299,48 @@ def edit_job(job_id):
         form.device_id.data = device_id
         form.action.data = action
         form.schedule_time.data = schedule_time
-        if value is not None:
-            form.value.data = value
+        if value:
+            if action == "set_colour":
+                form.colour.data = value
+            else:
+                form.value.data = value
 
     if form.validate_on_submit():
         # Remove old job
         scheduler.remove_job(job_id)
 
+        # Get values from form
+        device_id = form.device_id.data
+        action = form.action.data
+        schedule_time = form.schedule_time.data
+
+        if action == "set_colour":
+            value = form.colour.data
+        elif action in ["set_brightness", "set_temperature"]:
+            value = form.value.data
+        else:
+            value = None
+
         # Build new job ID
-        new_parts = [form.device_id.data, form.action.data]
-        if form.value.data is not None:
-            new_parts.append(str(form.value.data))
-        new_parts.append(form.schedule_time.data.strftime('%Y%m%d%H%M%S'))
-        new_job_id = "_".join(new_parts)
+        new_parts = [device_id, action]
+        if value is not None:
+            new_parts.append(str(value))
+        new_parts.append(schedule_time.strftime('%Y%m%d%H%M%S'))
+        new_job_id = "|".join(new_parts)
 
         # Build new args
-        new_args = [form.device_id.data, form.action.data]
-        if form.value.data is not None:
-            new_args.append(form.value.data)
+        args = [device_id, action]
+        if value is not None:
+            args.append(value.upper() if action == "set_colour" else value)
 
         # Add new job
         scheduler.add_job(
             id=new_job_id,
             func=control_device,
-            args=new_args,
+            args=args,
             trigger='date',
-            run_date=form.schedule_time.data,
+            run_date=schedule_time,
+            next_run_time=schedule_time,
             replace_existing=True
         )
 
