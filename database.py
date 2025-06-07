@@ -12,7 +12,7 @@ class Device(db.Model):
     brightness = db.Column(db.Integer, nullable=True)
     colour = db.Column(db.String(20), nullable=True)
 
-    def toggle_status(self): # To Turn On and Off
+    def toggle_status(self): #To Turn On and Off
         self.status = not self.status
 
 def get_all_devices(): #Retrieve All Devices

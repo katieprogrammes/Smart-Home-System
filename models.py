@@ -19,7 +19,7 @@ def colour_from_string(colour_str):
     except (KeyError, AttributeError):
         return Colour.DEFAULT
 
-# Light Base Class
+#Light Base Class
 class SuperLight:
     def __init__(self, brightness, colour: Colour):
         self._colour = None
@@ -41,7 +41,7 @@ class SuperLight:
         self._colour = colour
 
     def _is_colour_allowed(self, colour: Colour) -> bool:
-        return True  # Overridden by Subclasses
+        return True  #Overridden by Subclasses
 
 
     @property
@@ -164,7 +164,7 @@ class ColourLight(SuperLight, SmartDevice):
         SuperLight.__init__(self, brightness, colour)
 
     def _is_colour_allowed(self, colour: Colour) -> bool:
-        return True  # All Colours Allowed
+        return True  #All Colours Allowed
     
     def get_energy_usage(self):
         return 5 if self._status else 0
@@ -238,25 +238,25 @@ class Appliance(SmartDevice):
         return 10 if self._status else 0
     
 
-#Code for all device behaviour
+#Code for All Device Behaviour
 class SmartHomeSystem:
     def __init__(self):
         self._devices = []
 
-    #Add a device
+    #Add a Device
     def add_device(self, device):
         self._devices.append(device)
 
-    #Remove device
+    #Remove a Device
     def remove_device(self, name):
         self._devices = [d for d in self._devices if d._name != name]
 
-    #Turn off all devices
+    #Turn Off All Devices
     def turn_all_off(self):
         for device in self._devices:
             device.turn_off()
 
-    #Calculate total energy usage
+    #Calculate Total Energy Usage
     def get_total_energy_usage(self):
         return sum(device.get_energy_usage() for device in self._devices)
 

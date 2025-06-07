@@ -9,11 +9,12 @@ from datetime import datetime
 
 
 
-# Main Routes
+#Main Routes
 @app.route('/')
 def home():
     return render_template('index.html')
 
+#Add a Device
 @app.route('/add', methods=['GET', 'POST'])
 def add_device():
     form = AddDeviceForm()
@@ -31,6 +32,7 @@ def add_device():
         return redirect(url_for('view_all'))
     return render_template('add.html', form=form, title='Add Device')
 
+#Device Dashboard
 @app.route('/alldevices', methods=['GET'])
 def view_all():
     devices = Device.query.all()
@@ -71,19 +73,20 @@ def view_all():
         title = 'Devices'
     )
 
-@app.route('/toggle/<int:device_id>', methods=['GET', 'POST']) # To turn device on or off
+@app.route('/toggle/<int:device_id>', methods=['GET', 'POST']) #To Turn Device On or Off
 def toggle_device(device_id):
     device = Device.query.get_or_404(device_id)
     device.toggle_status()
     db.session.commit()
     return redirect('/alldevices')
 
-
+#Device Information Page
 @app.route("/device/<int:device_id>", methods=['GET', 'POST'])
 def device_info(device_id):
-    device = Device.query.get_or_404(device_id)  # Fetch Product or Show 404
+    device = Device.query.get_or_404(device_id)  #Fetch Device or Show 404
     return render_template("deviceinfo.html", device=device, title='Device Information')
 
+#Updating Temperature
 @app.route('/update_temperature/<int:device_id>', methods=['GET', 'POST'])
 def update_temperature(device_id):
     device = Device.query.get_or_404(device_id)
@@ -95,7 +98,7 @@ def update_temperature(device_id):
 
     if form.validate_on_submit():
         new_temp = form.temperature.data
-        # Validating input
+        #Validating input
         if device.type == 'Thermostat' and not (10 <= new_temp <= 30):
             flash("Temperature must be between 10 and 30 for a Thermostat.", "error")
             return redirect(url_for('update_temperature', device_id=device.id))
@@ -112,6 +115,7 @@ def update_temperature(device_id):
         return redirect(url_for('view_all'))
     return render_template('update_temperature.html', form=form, device=device, title='Update Temperature')
 
+#Updating Light Settings
 @app.route('/update_light/<int:device_id>', methods=['GET', 'POST'])
 def update_light(device_id):
     device = Device.query.get_or_404(device_id)
@@ -146,6 +150,7 @@ def update_light(device_id):
         return redirect(url_for('view_all'))
     return render_template('update_light.html', form=form, device=device, title='Change Light')
 
+#Updating Device Name
 @app.route('/update_name/<int:device_id>', methods=['GET', 'POST'])
 def update_name(device_id):
     device = Device.query.get_or_404(device_id)
@@ -161,6 +166,7 @@ def update_name(device_id):
 
     return render_template('update_name.html', form=form, device=device, title='Change Name')
 
+#Delete a Device
 @app.route('/delete/<int:device_id>', methods=['POST'])
 def delete_device(device_id):
     device = Device.query.get_or_404(device_id)
@@ -170,7 +176,7 @@ def delete_device(device_id):
     return redirect(url_for('view_all'))
 
 
-@app.route('/turn_off_lights', methods=['POST'])
+@app.route('/turn_off_lights', methods=['POST']) #Turn all Lights Off
 def turn_off_lights():
     lights = Device.query.filter(Device.type.in_(['BasicLight', 'ColourLight'])).all()
     for light in lights:
@@ -179,7 +185,7 @@ def turn_off_lights():
     flash('All Lights Off')
     return redirect(url_for('view_all'))
 
-@app.route('/turn_on_lights', methods=['POST'])
+@app.route('/turn_on_lights', methods=['POST']) #Turn all Lights On
 def turn_on_lights():
     lights = Device.query.filter(Device.type.in_(['BasicLight', 'ColourLight'])).all()
     for light in lights:
@@ -188,7 +194,7 @@ def turn_on_lights():
     flash('All Lights On')
     return redirect(url_for('view_all'))
 
-@app.route('/lock_all_doors', methods=['POST'])
+@app.route('/lock_all_doors', methods=['POST']) #Lock all Doors
 def lock_all_doors():
     locks = Device.query.filter_by(type='DoorLock').all()
     for lock in locks:
@@ -197,7 +203,7 @@ def lock_all_doors():
     flash('Doors Locked')
     return redirect(url_for('view_all'))
 
-@app.route('/maximum_security',  methods=['GET','POST'])
+@app.route('/maximum_security',  methods=['GET','POST']) #Maximum Security Toggle
 def max_security():
     locks = Device.query.filter_by(type='DoorLock').all()
     for lock in locks:
@@ -236,7 +242,7 @@ def schedule():
         else:
             value = None
 
-        # Compose job ID
+        #Compose Job ID
         job_id_parts = [device_id, action]
         if value is not None:
             job_id_parts.append(str(value))
@@ -250,7 +256,7 @@ def schedule():
             else:
                 args.append(value)
 
-        # Schedule the job
+        #Schedule the Job
         scheduler.add_job(
             id=job_id,
             func=control_device,
@@ -268,7 +274,7 @@ def schedule():
 @app.route('/delete_job/<job_id>')
 def delete_job(job_id):
     print("Jobs before delete:", [job.id for job in scheduler.get_jobs()])
-    scheduler.remove_job(job_id)  # without jobstore param
+    scheduler.remove_job(job_id)
     print("Jobs after delete:", [job.id for job in scheduler.get_jobs()])
     flash('Job deleted successfully.')
     return redirect(url_for('viewtasks'))
@@ -277,7 +283,7 @@ def delete_job(job_id):
 def edit_job(job_id):
     form = ScheduleForm()
 
-    # Split Job ID Format
+    #Split Job ID Format
     parts = job_id.split('|')
     if len(parts) not in [3, 4]:
         flash('Invalid job format.')
@@ -291,7 +297,7 @@ def edit_job(job_id):
 
     schedule_time = datetime.strptime(time_str, '%Y%m%d%H%M%S')
 
-    #Populate Device Choices
+    #Populate Form with Existing Job Choices
     devices = get_all_devices()
     form.device_id.choices = [(str(d.id), d.name) for d in devices]
 
@@ -306,10 +312,10 @@ def edit_job(job_id):
                 form.value.data = value
 
     if form.validate_on_submit():
-        # Remove old job
+        #Remove Old Job
         scheduler.remove_job(job_id)
 
-        # Get values from form
+        #Get Values from Form
         device_id = form.device_id.data
         action = form.action.data
         schedule_time = form.schedule_time.data
@@ -321,19 +327,19 @@ def edit_job(job_id):
         else:
             value = None
 
-        # Build new job ID
+        #Build New Job ID
         new_parts = [device_id, action]
         if value is not None:
             new_parts.append(str(value))
         new_parts.append(schedule_time.strftime('%Y%m%d%H%M%S'))
         new_job_id = "|".join(new_parts)
 
-        # Build new args
+        #Build New args
         args = [device_id, action]
         if value is not None:
             args.append(value.upper() if action == "set_colour" else value)
 
-        # Add new job
+        #Add New Job
         scheduler.add_job(
             id=new_job_id,
             func=control_device,
