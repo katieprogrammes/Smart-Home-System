@@ -137,7 +137,7 @@ def update_light(device_id):
         # Update colour if applicable
         if hasattr(device, "colour") and selected_colour:
             try:
-                device.colour = Colour[selected_colour.upper()]
+                device.colour = Colour[selected_colour.upper()].value  
             except KeyError:
                 raise InvalidDeviceTypeError("Invalid colour selected.")
 

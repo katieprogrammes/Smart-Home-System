@@ -138,3 +138,13 @@ strong {
     text-align: center;
     padding: 10px 0;
 }
+.nameform {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.nojobs {
+    font-size: 24px;
+    font-style: italic;
+}

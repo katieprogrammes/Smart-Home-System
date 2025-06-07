@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% block body %}
-<h2>Change Name - {{ device.name }}</h2>
-<form method="POST">
+<h2 class="title">Change Name - {{ device.name }}</h2>
+<div class="row">
+    <div class="col"></div>
+    <div class="col">
+        <form method="POST" class="nameform">
     {{ form.hidden_tag() }}
     <div class="mb-3">
         {{ form.name.label(class="form-label") }}
@@ -9,4 +12,8 @@
     </div>
     <button type="submit" class="btn btn-success">{{ form.submit.label.text }}</button>
 </form>
+    </div>
+    <div class="col"></div>
+</div>
+
 {% endblock %}
