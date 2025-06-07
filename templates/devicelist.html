@@ -6,7 +6,7 @@
     </div>
     <div class="col"></div>
     <div class="col">
-        <h5>Total Energy Usage: {{ total_energy }}W</h5>
+        <h4 class="totalenergy">Total Energy Usage: {{ total_energy }}W</h4>
     </div>
 </div>
 {% for type, devices in grouped_devices.items() %}
@@ -15,21 +15,21 @@
         <h3 class="mt-4">{{ type }}s</h3>
     </div>
     <div class="col">
-        {% if type == 'BasicLight' or type == 'ColourLight' %}
+        {% if type == 'ColourLight' %}
         <div class="row">
             <div class="col">
                 <form method="POST" action="{{ url_for('turn_off_lights') }}">
-                    <button type="submit" style="margin-bottom: 10px;">Turn All Lights Off</button>
+                    <button type="submit" class="btn btn-dark">Turn All Lights Off</button>
                 </form>
             </div>
             <div class="col">
                 <form method="POST" action="{{ url_for('turn_on_lights') }}">
-                    <button type="submit" style="margin-bottom: 10px;">Turn All Lights On</button>
+                    <button type="submit" class="btn btn-success">Turn All Lights On</button>
                 </form>
                 {% endif %}
                 {% if type == 'DoorLock' %}
                 <form method="POST" action="{{ url_for('lock_all_doors') }}">
-                    <button type="submit" style="margin-bottom: 10px;">Lock All Doors</button>
+                    <button type="submit" class="btn btn-primary">Lock All Doors</button>
                 </form>
                 {% endif %}
             </div>

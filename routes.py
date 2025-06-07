@@ -172,7 +172,7 @@ def delete_device(device_id):
 
 @app.route('/turn_off_lights', methods=['POST'])
 def turn_off_lights():
-    lights = Device.query.filter(Device.type.in_(['BasicLight', 'ColouredLight'])).all()
+    lights = Device.query.filter(Device.type.in_(['BasicLight', 'ColourLight'])).all()
     for light in lights:
         light.status = False
     db.session.commit()
@@ -181,7 +181,7 @@ def turn_off_lights():
 
 @app.route('/turn_on_lights', methods=['POST'])
 def turn_on_lights():
-    lights = Device.query.filter(Device.type.in_(['BasicLight', 'ColouredLight'])).all()
+    lights = Device.query.filter(Device.type.in_(['BasicLight', 'ColourLight'])).all()
     for light in lights:
         light.status = True
     db.session.commit()

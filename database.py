@@ -12,16 +12,16 @@ class Device(db.Model):
     brightness = db.Column(db.Integer, nullable=True)
     colour = db.Column(db.String(20), nullable=True)
 
-    def toggle_status(self): # To turn on and off
+    def toggle_status(self): # To Turn On and Off
         self.status = not self.status
 
-def get_all_devices():
+def get_all_devices(): #Retrieve All Devices
         return Device.query.all()    
 
-def get_device_by_id(device_id):
+def get_device_by_id(device_id): #Query Database for a Device
     return Device.query.get(device_id)
 
-def save_device(device_id, device):
+def save_device(device_id, device): #Saving Device Changes
     db_device = Device.query.get(device_id)
     if not db_device:
         raise ValueError(f"No device found in DB with ID {device_id}")

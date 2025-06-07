@@ -1,14 +1,13 @@
-# tasks.py
 from database import Device, get_device_by_id, save_device
 from models import *
 from app import app
 
 def control_device(device_id, action, value=None):
     with app.app_context():
-        device_row = get_device_by_id(device_id)
+        device_row = get_device_by_id(device_id) #Retrieve Device
         device = SmartDevice.from_db(device_row)
 
-        if action == 'on':
+        if action == 'on': #Perform Relevant Action
             device.turn_on()
         elif action == 'off':
             device.turn_off()
@@ -32,4 +31,4 @@ def control_device(device_id, action, value=None):
         else:
             print(f"Unsupported action or device type: {action}")
 
-        save_device(device_id, device)
+        save_device(device_id, device) #Save Changes

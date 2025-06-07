@@ -115,6 +115,12 @@ strong {
     display: flex;
     justify-content: center;
 }
+.totalenergy {
+    margin-top: 10px;
+    font-weight: 700;
+    color: navy;
+    text-decoration: underline;
+}
 .errorpage {
     display: flex;
     flex-direction: column;

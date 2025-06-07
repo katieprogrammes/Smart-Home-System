@@ -31,6 +31,7 @@ class SuperLight:
     def colour(self):
         return self._colour
 
+    #Colour Validation
     @colour.setter
     def colour(self, colour):
         if not isinstance(colour, Colour):
@@ -40,13 +41,14 @@ class SuperLight:
         self._colour = colour
 
     def _is_colour_allowed(self, colour: Colour) -> bool:
-        return True  # Overridden by subclasses
+        return True  # Overridden by Subclasses
 
 
     @property
     def brightness(self):
         return self._brightness
 
+    #Brightness Validation
     @brightness.setter
     def brightness(self, value):
         if 0 <= value <= 100:
@@ -64,6 +66,7 @@ class SuperTemp:
     def temperature(self):
         return self._temperature
     
+    #Temperature Validation
     @temperature.setter
     def temperature(self, value):
         if 0 <= value <= 100:
@@ -81,6 +84,7 @@ class SmartDevice(ABC):
         self._status = status
         SmartDevice.total_devices += 1
 
+    #Getter Methods
     @property
     def name(self):
         return self._name
@@ -88,10 +92,12 @@ class SmartDevice(ABC):
     @property
     def type(self):
         return self.__class__.__name__
+    
     @property
     def is_on(self):
         return self._status
 
+    #Shared Methods
     def turn_on(self):
         self._status = True
 
@@ -136,9 +142,9 @@ class SmartDevice(ABC):
         return f"{self._name} ({'On' if self._status else 'Off'})"
 
 
-#Devices
+#Device Subclasses
 class BasicLight(SuperLight, SmartDevice):
-    ALLOWED_COLOURS = {Colour.DEFAULT}
+    ALLOWED_COLOURS = {Colour.DEFAULT} #Restrcits Colour Options
     
     #Initialising
     def __init__(self, name, brightness, colour: Colour, status=False):
@@ -158,7 +164,7 @@ class ColourLight(SuperLight, SmartDevice):
         SuperLight.__init__(self, brightness, colour)
 
     def _is_colour_allowed(self, colour: Colour) -> bool:
-        return True  # All colours allowed
+        return True  # All Colours Allowed
     
     def get_energy_usage(self):
         return 5 if self._status else 0
@@ -168,6 +174,7 @@ class Kettle(SuperTemp, SmartDevice):
         SmartDevice.__init__(self, name, status)
         SuperTemp.__init__(self, temperature)
 
+    #Overwriting Base Class Temperature Validation
     @SuperTemp.temperature.setter
     def temperature(self, value):
         if 60 <= value <= 100:
@@ -216,7 +223,6 @@ class Camera(SmartDevice):
     def get_energy_usage(self):
         return 10 if self._status else 0
 
-
 class DoorLock(SmartDevice):
     def __init__(self, name, status=False):
         super().__init__(name, status)
@@ -254,6 +260,7 @@ class SmartHomeSystem:
     def get_total_energy_usage(self):
         return sum(device.get_energy_usage() for device in self._devices)
 
+    #Show Device Status
     def show_devices(self):
         for device in self._devices:
             print(device)
